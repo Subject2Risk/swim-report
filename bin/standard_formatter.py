@@ -123,7 +123,9 @@ def national(filename, delimiter = ',', standard='easterns'):
 
 			#Age compensations
 			ages = []
+			filler = []
 			for i, nt in enumerate(new_times):
+				filler.append('')
 				if not nt:
 					new_times[i] = prior_nt
 					ages.append(i)
@@ -133,7 +135,7 @@ def national(filename, delimiter = ',', standard='easterns'):
 
 			new_times.reverse()
 			ages.reverse()
-			print delimiter.join(map(str, event + new_times + ages))
+			print delimiter.join(map(str, event + filler + new_times + ages + ages))
 
 
 if __name__ == "__main__":
