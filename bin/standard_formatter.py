@@ -12,7 +12,7 @@ def age_adjustment(fill_width, column_count):
 		return [0] * column_count
 
 
-def festival(filename, columns = 5):
+def festival(filename, columns = 5, start_age=10):
 	def event_name(abbrv):
 		return {
 			'Fr' : 'Free',
@@ -21,6 +21,14 @@ def festival(filename, columns = 5):
 			'Br' : 'Breast',
 			'IM' : 'IM'
 		}[abbrv]
+	print 'Young Age, {0}'.format(start_age)
+	print 'Old Age, {0}'.format(start_age + columns - 1)
+	age_line = 'Event'
+	for course in range(0,2):
+		for age in range(start_age, start_age + columns):
+			age_line += ',{0}'.format(age)
+	print age_line
+
 	with open(filename, 'r') as standard:
 		for line in standard:
 			times = line.split()
@@ -44,7 +52,7 @@ def festival(filename, columns = 5):
 				new_times = [ times[0] + ' ' + times[1]] + sc_times + filler + lc_times + age_adjust
 			print ','.join(map(str, new_times))
 
-def regional(filename, columns = 6):
+def regional(filename, columns = 6, start_age = 10):
 	def regional_formatter(header, times):
 		if len(times) == 1:
 			print ','.join(map(str, [header, times[0]] + [''] * (columns * 2 - 1) + [0] + [''] * (columns * 2 - 1)))
@@ -59,6 +67,14 @@ def regional(filename, columns = 6):
 			print ','.join(map(str, new_times))
 
 	header = None
+	print 'Young Age, {0}'.format(start_age)
+	print 'Old Age, {0}'.format(start_age + columns - 1)
+	age_line = 'Event'
+	for course in range(0,2):
+		for age in range(start_age, start_age + columns):
+			age_line += ',{0}'.format(age)
+	print age_line
+
 	with open(filename, "r") as standard:
 		for line in standard:
 			import re
@@ -78,8 +94,10 @@ if __name__ == "__main__":
 		if os.path.isfile(fn):
 			if "regional" in sys.argv[2]:
 				regional(fn)
-			elif any(st in sys.argv[2] for st in ["festival", "provincial"]):
+			elif "festival" in sys.argv[2]:
 				festival(fn)
+			elif "provincial" in sys.argv[2]:
+				festival(fn, start_age = 13)
 	else:
 		print 'Usage:'
 		print ' {0} {{filename}} {{formater}}'
