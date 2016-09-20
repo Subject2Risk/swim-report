@@ -38,7 +38,7 @@ def festival(filename, columns = 5):
 def regional(filename, columns = 6):
 	def regional_formatter(header, times):
 		if len(times) == 1:
-			print ','.join(map(str, [header, times[0]] + [','] * (columns * 2 - 1) + [0] + [''] * (columns * 2 - 1)))
+			print ','.join(map(str, [header, times[0]] + [''] * (columns * 2 - 1) + [0] + [''] * (columns * 2 - 1)))
 		else:
 			column_count = len(times) // 2
 			sc_times, lc_times = [times[x:x+column_count] for x in xrange(0, len(times), column_count)]
