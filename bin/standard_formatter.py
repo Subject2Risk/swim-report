@@ -1,5 +1,17 @@
 #!/usr/bin/python
 
+def age_adjustment(fill_width, column_count):
+	if fill_width > 0:
+		age_adjust = []
+		for age in range(fill_width, 0, -1):
+			age_adjust.append(age)
+		for age in range(0, column_count):
+			age_adjust.append(0)
+		return age_adjust
+	else:
+		return [0] * column_count
+
+
 def festival(filename, columns = 5):
 	with open(filename, 'r') as standard:
 		for line in standard:
@@ -11,26 +23,31 @@ def festival(filename, columns = 5):
 				lc_times = times[:half-1]
 				sc_times = times[half + 1:]
 				sc_times.reverse()
-				filler = [''] * (columns - len(lc_times))
-				new_times = header + filler + sc_times + filler + lc_times
+				fill_width = columns - len(lc_times)
+				filler = [''] * fill_width
+				age_adjust = age_adjustment(fill_width, len(lc_times))
+				new_times = header + filler + sc_times + filler + lc_times + age_adjust + age_adjust
 			else:
 				lc_times = [''] * columns
 				filler = [''] * (columns - 1)
 				sc_times = [times[2]]
-				new_times = [ times[0] + ' ' + times[1]] + sc_times + filler + lc_times
+				age_adjust = [0] + [''] * (columns * 2 - 1)
+				new_times = [ times[0] + ' ' + times[1]] + sc_times + filler + lc_times + age_adjust
 			print ','.join(map(str, new_times))
 
 def regional(filename, columns = 6):
 	def regional_formatter(header, times):
 		if len(times) == 1:
-			print header + "," + times[0]
+			print ','.join(map(str, [header, times[0]] + [','] * (columns * 2 - 1) + [0] + [''] * (columns * 2 - 1)))
 		else:
 			column_count = len(times) // 2
 			sc_times, lc_times = [times[x:x+column_count] for x in xrange(0, len(times), column_count)]
-			filler = ['']  * (columns - column_count)
-			new_times = [header] + filler + sc_times + filler + lc_times
+			fill_width = columns - column_count
+			filler = ['']  * fill_width
+			age_adjust = age_adjustment(fill_width, column_count)
+			new_times = [header] + filler + sc_times + filler + lc_times + age_adjust + age_adjust
 			print ','.join(map(str, new_times))
-	
+
 	header = None
 	with open(filename, "r") as standard:
 		for line in standard:
