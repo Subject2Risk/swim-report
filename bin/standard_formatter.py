@@ -104,7 +104,7 @@ def national(filename, delimiter = ',', standard='easterns', male=True):
 		else:
 			age_start = ns['min_age'] - 1
 
-		age_header(age_start, column_count, delimiter, short_and_long = False)
+		age_header(age_start, column_count, delimiter)
 		for line in standards:
 			data = line.split()
 			event = [data[0] + ' ' + event_name(data[1])]
@@ -129,6 +129,7 @@ def national(filename, delimiter = ',', standard='easterns', male=True):
 			#Age compensations
 			ages = []
 			filler = []
+			prior_nt = '' 
 			for i, nt in enumerate(new_times):
 				filler.append('')
 				if not nt:
