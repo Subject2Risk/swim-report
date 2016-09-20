@@ -1,0 +1,4 @@
+#!/bin/bash
+[[ ! -f ${1}.html ]] && echo "Fetching ..." && wget -q -O ${1}.html "https://www.swimrankings.net/index.php?page=athleteDetail&athleteId=${1}" 
+[[   -f ${1}.html ]] && echo "Filtering ..." && sed -r 's#onmouseover="return escape\([^)]+\)"##g;s#<[^>]+>([^<]+)</a>#\1#g;s#.+(<table class="athleteBest".+</table>).+</table>.+#\1#;s#(<[^ ]+) [^>]+#\1#g;s#&nbsp;# #g;/table/!d;s#</t[hd]></tr></?t[^>]+>#\n#g;s#</td><td>#,#g;s#<td>##g' ${1}.html | sed -r '/table/d;/^$/d;s#[ \t]+$##;s#^([1-9][05]+)m ([^,]+).+#&,\2,\1#;/ Laps?,.+,-,/d' | sort -t, -k2,2 -k8r,8 -k9n,9 > ${1}.csv
+[[ -f ${1}.csv && -f ${1}.html ]] && echo "Done." && rm ${1}.html

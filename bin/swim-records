@@ -1,0 +1,16 @@
+for gender in 1 2 ; do # 1 = Men, 2 = Women
+	if [[ "1" == "${gender}" ]] ; then
+		sex="Male"
+	else
+		sex="Female"
+	fi
+	for course in SCM LCM ; do
+		for age in X_10 11_11 12_12 13_13 14_14 15_15 16_16 17_17 18_18 X_X ; do 
+			filename="${sex}-${age#*_}-${course}"
+			echo ${filename}
+			[[ ! -f ${filename}.html ]] && wget -q -O ${filename}.html "https://www.swimrankings.net/index.php?page=rankingDetail&clubId=76084&gender=${gender}&season=-1&course=${course}&stroke=0&agegroup=${age}" 
+			[[   -f ${filename}.html ]] && sed -r 's#onmouseover="return escape\([^)]+\)"##g;s#<img [^>]+>##g;s#<[^>]+>([^<]+)</a>#\1#g;s#&nbsp;# #g;s#<table#\n&#g' ${filename}.html | sed -r '/<table class="rankingList"/!d' | sed -r 's# class="[^"]+"##g;s#(<[^ ]+)[^>]*>#\1>#;s#<script#\n&#g;s#/script>#&\n#g' | sed -r '/^<script.+\/script>$/d;s#<tr#\n&#g' | sed -r '/^<tr><td>/!d;s#</?tr>##g;s#</?table>##g;s#^<td>##;s#</td>$##;s#</td><td>#\t#g' | cut -f1,6 | sed -r '/^(5|10|20|40|80|150)0m /!d;/Laps/d' > ${filename}.csv && rm ${filename}.html
+		done
+	done
+done
+

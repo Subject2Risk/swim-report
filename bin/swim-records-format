@@ -1,0 +1,35 @@
+#!/usr/bin/python
+import glob, csv
+
+races = [ '50m Freestyle', '100m Freestyle','200m Freestyle','400m Freestyle','800m Freestyle','1500m Freestyle','50m Backstroke','100m Backstroke','200m Backstroke','50m Breaststroke','100m Breaststroke','200m Breaststroke','50m Butterfly','100m Butterfly','200m Butterfly','100m Medley','200m Medley','400m Medley']
+
+record = {}
+
+for row in [x[:-4].split('-') for x in glob.glob('*.csv')]:
+    if row[0] not in record:
+        record[row[0]] = {}
+    if row[2] not in record[row[0]]:
+        record[row[0]][row[2]] = {}
+    if row[1] not in record[row[0]][row[2]]:
+        record[row[0]][row[2]][row[1]] = {}
+    filename='-'.join(row) + '.csv'
+    with open(filename) as source:
+        data = csv.reader(source, delimiter='\t')
+        for cell in data:
+            record[row[0]][row[2]][row[1]][cell[0]] = cell[1]
+
+for sex in ["Male", "Female"]:
+    with open("../" + sex + "-Records.csv",'w') as record_file:
+        for race in races:
+            line = [ race ]
+            for course in ["LCM", "SCM"]:
+                for age in ["10", "11", "12", "13", "14", "15", "16", "17", "18"]:
+                    try:
+                        time = str(record[sex][course][age][race])
+                        if ':' not in time:
+                            time = '0:' + time
+                        line.append(time)
+                    except KeyError:
+                        line.append('')
+            record_file.write("{0}\n".format(','.join(line)))
+
