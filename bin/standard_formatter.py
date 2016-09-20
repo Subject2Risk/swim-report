@@ -13,13 +13,21 @@ def age_adjustment(fill_width, column_count):
 
 
 def festival(filename, columns = 5):
+	def event_name(abbrv):
+		return {
+			'Fr' : 'Free',
+			'Bk' : 'Back',
+			'Fl' : 'Fly',
+			'Br' : 'Breast',
+			'IM' : 'IM'
+		}[abbrv]
 	with open(filename, 'r') as standard:
 		for line in standard:
 			times = line.split()
 			length = len(times)
 			if length != 3:
 				half = length / 2
-				header = [times[half - 1] + ' ' + times[half]]
+				header = [times[half - 1] + ' ' + event_name(times[half])]
 				lc_times = times[:half-1]
 				sc_times = times[half + 1:]
 				sc_times.reverse()
