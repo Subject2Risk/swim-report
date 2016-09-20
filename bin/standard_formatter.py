@@ -23,8 +23,8 @@ def festival(filename, columns = 5, start_age=10):
 		}[abbrv]
 	print 'Young Age, {0}'.format(start_age)
 	print 'Old Age, {0}'.format(start_age + columns - 1)
-	age_line = 'Event'
-	for course in range(0,2):
+	age_line = '\nEvent'
+	for course in range(0,4):
 		for age in range(start_age, start_age + columns):
 			age_line += ',{0}'.format(age)
 	print age_line
@@ -69,8 +69,8 @@ def regional(filename, columns = 6, start_age = 10):
 	header = None
 	print 'Young Age, {0}'.format(start_age)
 	print 'Old Age, {0}'.format(start_age + columns - 1)
-	age_line = 'Event'
-	for course in range(0,2):
+	age_line = '\nEvent'
+	for course in range(0,4):
 		for age in range(start_age, start_age + columns):
 			age_line += ',{0}'.format(age)
 	print age_line
