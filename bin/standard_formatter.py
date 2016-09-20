@@ -92,14 +92,19 @@ national_standards = {
 	"csc":  	{ 'max_age': 19, 'min_age' : 19, 'columns' : [3]},
 	"cjc":  	{ 'max_age': 17, 'min_age' : 14, 'columns' : [4,5,6,7]},
 	"easterns":	{ 'max_age': 17, 'min_age' : 14, 'columns' : [8,10,11,12]},
-	"westerns":	{ 'max_age': 17, 'min_age' : 15, 'columns' : [9,10,11,12]}
+	"westerns":	{ 'max_age': 17, 'min_age' : 14, 'columns' : [9,10,11,12]}
 }
 
-def national(filename, delimiter = ',', standard='easterns'):
+def national(filename, delimiter = ',', standard='easterns', male=True):
 	with open(filename, 'r') as standards:
 		ns = national_standards[standard]
 		column_count = len(ns['columns'])
-		age_header(ns['min_age'], column_count, delimiter, short_and_long = False)
+		if male:
+			age_start = ns['min_age']
+		else:
+			age_start = ns['min_age'] - 1
+
+		age_header(age_start, column_count, delimiter, short_and_long = False)
 		for line in standards:
 			data = line.split()
 			event = [data[0] + ' ' + event_name(data[1])]
@@ -143,8 +148,8 @@ if __name__ == "__main__":
 	if len(sys.argv) >= 3:
 		import os
 		fn = sys.argv[1]
-		if (len(sys.argv) == 4):
-			delimiter = sys.argv[3]
+		if (len(sys.argv) == 5):
+			delimiter = sys.argv[4]
 			if 't' == delimiter:
 				delimiter = '\t'
 		else:
@@ -159,8 +164,14 @@ if __name__ == "__main__":
 			elif "provincial" in standard:
 				festival(fn, start_age = 13, delimiter = delimiter)
 			elif any(s in standard for s in national_standards.keys()):
-				national(fn, delimiter = delimiter, standard=standard)
+				male = True
+				if len(sys.argv) == 4:
+					if sys.argv[3] == 'f':
+						male = False
+				national(fn, delimiter = delimiter, standard=standard, male = male)
 	else:
 		print 'Usage:'
-		print ' {0} {{filename}} {{formater}}'.format(sys.argv[0])
-		print 'Where "formatter" is one of "Regional", "Festival", "Provincial", "Trials", "CSC", "CJC", "Easterns", or "Westerns".'
+		print ' {0} {{filename}} {{formater}} [m (default) | f] [delimiter ("," = default)]'.format(sys.argv[0])
+		print 'Where "formatter" is one of:'
+		print '   "Regional", "Festival", "Provincial", "Trials", "CSC", "CJC", "Easterns", or "Westerns".'
+		print 'Specifyin the delimiter requires the gendder ("m" or "f") be specified too.'
