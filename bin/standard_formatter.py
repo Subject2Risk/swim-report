@@ -24,9 +24,10 @@ def festival(filename, columns = 5):
 				sc_times = times[half + 1:]
 				sc_times.reverse()
 				fill_width = columns - len(lc_times)
-				filler = [''] * fill_width
+				lc_filler = [lc_times[0]] * fill_width
+				sc_filler = [sc_times[0]] * fill_width
 				age_adjust = age_adjustment(fill_width, len(lc_times))
-				new_times = header + filler + sc_times + filler + lc_times + age_adjust + age_adjust
+				new_times = header + sc_filler + sc_times + lc_filler + lc_times + age_adjust + age_adjust
 			else:
 				lc_times = [''] * columns
 				filler = [''] * (columns - 1)
@@ -43,9 +44,10 @@ def regional(filename, columns = 6):
 			column_count = len(times) // 2
 			sc_times, lc_times = [times[x:x+column_count] for x in xrange(0, len(times), column_count)]
 			fill_width = columns - column_count
-			filler = ['']  * fill_width
+			sc_filler = [sc_times[0]]  * fill_width
+			lc_filler = [lc_times[0]]  * fill_width
 			age_adjust = age_adjustment(fill_width, column_count)
-			new_times = [header] + filler + sc_times + filler + lc_times + age_adjust + age_adjust
+			new_times = [header] + sc_filler + sc_times + lc_filler + lc_times + age_adjust + age_adjust
 			print ','.join(map(str, new_times))
 
 	header = None
