@@ -86,6 +86,8 @@ def regional(filename, columns = 6, start_age = 10, delimiter = ','):
 				times = []
 			else:
 				times.append(line.strip())
+		if header:
+			regional_formatter(header, times)
 
 national_standards = { 
 	"trials":	{ 'max_age': 17, 'min_age' : 15, 'columns' : [0,1,2]},
