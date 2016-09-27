@@ -26,12 +26,63 @@ def age_header(start_age, columns, delimiter, short_and_long = True):
 
 def event_name(abbrv):
 	return {
-		'BK' : 'Back',
-		'FL' : 'Fly',
-		'BR' : 'Breast',
-		'FR' : 'Free',
-		'IM' : 'IM'
+		'BK'       : 'Back',
+		'DOS'      : 'Back',
+		'FL'       : 'Fly',
+		'PAPILLON' : 'Fly',
+		'BRASSE'   : 'Breast',
+		'BR'       : 'Breast',
+		'LIBRE'    : 'Free',
+		'FR'       : 'Free',
+		'QNI'      : 'IM',
+		'IM'       : 'IM'
 	}[abbrv.upper()]
+
+def fnq(filename, columns = 8, delimiter = ','):
+	with open(filename, 'r') as standard:
+		for line in standard:
+			data = line.split()
+			header = ['{0:>6}'.format(data[0]) + ' ' + event_name(data[1])]
+			times = data[2:]
+			length = len(times)
+			if columns == 11:
+				if length == 1:
+					times = ['        '] * 10 + times
+				elif length == 2:
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times = ['        '] * 3 + times
+				elif length == 3:
+					times = times + ['        '] * 8
+				elif length == 6:
+					times.insert(3,'        ')
+					times.insert(3,'        ')
+					times.insert(3,'        ')
+					times.insert(3,'        ')
+					times.insert(3,'        ')
+				elif length == 8:
+					times = ['        '] * 3 + times
+				elif length == 9:
+					times = ['        '] * 2 + times
+			else:
+				if length == 2:
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+					times.insert(1,'        ')
+				elif length == 3:
+					times = ['        '] * 5 + times
+				elif length == 7:
+					times = ['        '] + times
+				times = ['        '] * 3 + times
+			print delimiter.join(map(str, header + times))
+
 
 def festival(filename, columns = 5, start_age=10, delimiter = ','):
 	age_header(start_age, columns, delimiter)
@@ -164,6 +215,8 @@ if __name__ == "__main__":
 				regional(fn, delimiter = delimiter)
 			elif "festival" in standard:
 				festival(fn, delimiter = delimiter)
+			elif "fnq" in standard:
+				fnq(fn, delimiter = delimiter)
 			elif "provincial" in standard:
 				festival(fn, start_age = 13, delimiter = delimiter)
 			elif any(s in standard for s in national_standards.keys()):
