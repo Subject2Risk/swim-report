@@ -27,13 +27,17 @@ def age_header(start_age, columns, delimiter, short_and_long = True):
 def event_name(abbrv):
 	return {
 		'BK'       : 'Back',
+		'BACK'     : 'Back',
 		'DOS'      : 'Back',
 		'FL'       : 'Fly',
+		'FLY'      : 'Fly',
 		'PAPILLON' : 'Fly',
 		'BRASSE'   : 'Breast',
+		'BREAST'   : 'Breast',
 		'BR'       : 'Breast',
 		'LIBRE'    : 'Free',
 		'FR'       : 'Free',
+		'FREE'     : 'Free',
 		'QNI'      : 'IM',
 		'IM'       : 'IM'
 	}[abbrv.upper()]
@@ -219,6 +223,8 @@ if __name__ == "__main__":
 				fnq(fn, delimiter = delimiter)
 			elif "provincial" in standard:
 				festival(fn, start_age = 13, delimiter = delimiter)
+			elif "nova-scotia" in standard:
+				festival(fn, columns = 6, start_age = 12, delimiter = delimiter)
 			elif any(s in standard for s in national_standards.keys()):
 				male = True
 				if len(sys.argv) == 4:
