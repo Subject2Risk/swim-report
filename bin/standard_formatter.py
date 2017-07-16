@@ -218,7 +218,7 @@ if __name__ == "__main__":
 			if "regional" in standard:
 				regional(fn, delimiter = delimiter)
 			elif "festival" in standard:
-				festival(fn, delimiter = delimiter)
+				festival(fn, delimiter = delimiter, columns=4)
 			elif "fnq" in standard:
 				fnq(fn, delimiter = delimiter)
 			elif "provincial" in standard:
