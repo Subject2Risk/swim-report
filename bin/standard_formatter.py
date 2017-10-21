@@ -115,34 +115,27 @@ def festival(filename, columns = 5, start_age=10, delimiter = ','):
 			print delimiter.join(map(str, new_times))
 
 def regional(filename, columns = 6, start_age = 10, delimiter = ','):
-	def regional_formatter(header, times):
-		if len(times) == 1:
-			print delimiter.join(map(str, [header, times[0]] + [''] * (columns * 2 - 1) + [0] + [''] * (columns * 2 - 1)))
+	def regional_formatter(distance, event, times):
+		field_count = len(times)
+		if field_count == 1:
+			csv_times = ',{}'.format(times[0]) + ',' * (columns * 2 - field_count)
+			age_adjustments = '0' + ',' * (columns * 2 - field_count)
 		else:
-			column_count = len(times) // 2
-			sc_times, lc_times = [times[x:x+column_count] for x in xrange(0, len(times), column_count)]
-			fill_width = columns - column_count
-			sc_filler = [sc_times[0]]  * fill_width
-			lc_filler = [lc_times[0]]  * fill_width
-			age_adjust = age_adjustment(fill_width, column_count)
-			new_times = [header] + sc_filler + sc_times + lc_filler + lc_times + age_adjust + age_adjust
-			print delimiter.join(map(str, new_times))
+			event_count = field_count // 2
+			csv_times  = ',{}'.format(times[event_count]) * (columns - event_count)
+			csv_times += ',' + ','.join(times[event_count:])
+			csv_times += ',{}'.format(times[0]) * (columns - event_count)
+			csv_times += ',' + ','.join(times[:event_count])
+			age_adjustments = ','.join(map(str,age_adjustment(columns - event_count, event_count) * 2))
+		print '{} {}{},{}'.format(distance, event, csv_times, age_adjustments)
 
 	age_header(start_age, columns, delimiter)
 
 	header = None
 	with open(filename, "r") as standard:
 		for line in standard:
-			import re
-			if re.search('[a-zA-Z]', line):
-				if header:
-					regional_formatter(header, times)
-				header = line.strip()
-				times = []
-			else:
-				times.append(line.strip())
-		if header:
-			regional_formatter(header, times)
+			fields = line.split()
+			regional_formatter(fields[0], fields[1], fields[2:])
 
 national_standards = { 
 	"trials":	{ 'max_age': 17, 'min_age' : 15, 'columns' : [0,1,2]},
