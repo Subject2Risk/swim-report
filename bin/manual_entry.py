@@ -96,10 +96,10 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 		start_age  = table['age']['young']
 		finish_age = table['age']['old']
 
-		print "Young Age {}".format(start_age)
-		print "Old Age   {}".format(finish_age)
+		print "Young Age{} {}".format(delineator, start_age)
+		print "Old Age  {} {}".format(delineator, finish_age)
 		print ""
-		print "{:11}:{}".format("Event", delineator),
+		print "{:11}{}".format("Event", delineator),
 		for course in ['SC', 'LC']:
 			for age in range(start_age, finish_age + 1):
 				print "{:8}{}".format(age, delineator),
@@ -108,7 +108,7 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 				print "{:2}{}".format(age, delineator),
 		print ""
 		for event in event_key_list:
-			print "{:>11}:{}".format(event, delineator),
+			print "{:>11}{}".format(event, delineator),
 			for course in ['SC', 'LC']:
 				last_time = no_time
 				for time in table[course][event]['times']:
@@ -163,4 +163,4 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 
 
 if __name__ == "__main__":
-	input_standard()
+	input_standard(delineator=',')
