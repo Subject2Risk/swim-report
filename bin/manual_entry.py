@@ -30,7 +30,7 @@ all_events = [
 
 backup = 'input.txt'
 
-def input_standard(backup_file = backup, events = all_events, delineator=''):
+def input_standard(backup_file = backup, events = all_events, delineator='', quiet=False):
 	""" Create a swim time table.
 
 	The format of the table is:
@@ -55,12 +55,14 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 		term = Terminal()
 		times = {}
 		for event in event_list:
-			input_time = raw_input("{: <11}: ".format(event))
+			if quiet:
+				input_time = raw_input("")
+			else:
+				input_time = raw_input("{: <11}: ".format(event))
 			times[event] = str2time(input_time)
-			print term.move_up()  + "{: <11}: {:<12} {}".format(event, input_time, times[event].strftime("%M:%S.%f")[:-4])
-			
-			#times[event] = str2time(raw_input("{0: <11}: ".format(event)))
-			
+			if not quiet:
+				print term.move_up()  + "{: <11}: {:<12} {}".format(event, input_time, times[event].strftime("%M:%S.%f")[:-4])
+
 		with open(backup_file,'a+') as save:
 			for event in event_list: # Insure order
 				save.write("{}\n".format(times[event].strftime("%M:%S.%f")[:-4]))
@@ -136,15 +138,23 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 
 	table = { 'age': {}}
 
-	table['age']['old']   = int(raw_input("Old Age  :"))
-	table['age']['young'] = int(raw_input("Young Age:"))
+	if quiet:
+		table['age']['old']   = int(raw_input(""))
+		table['age']['young'] = int(raw_input(""))
+	else:
+		table['age']['old']   = int(raw_input("Old Age  :"))
+		table['age']['young'] = int(raw_input("Young Age:"))
 
 	with open(backup_file, 'w') as f:
 		f.write("{}\n".format(table['age']['old']))
 		f.write("{}\n".format(table['age']['young']))
 
 	for course in ['SC', 'LC']:
-		if 'n' in raw_input( "Enter '{}' times? (Y/n)".format(course)):
+		if quiet:
+			answer = raw_input( "".format(course))
+		else:
+			answer = raw_input( "Enter '{}' times? (Y/n)".format(course))
+		if 'n' in answer:
 			with open(backup_file, 'a+') as f:
 				f.write('n\n')
 			table[course] = initialize_event_times(events, table['age']['old'] - table['age']['young'] + 1)
@@ -154,7 +164,8 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 			table[course] = initialize_event_times(events)
 
 			for age in range(table['age']['old'], table['age']['young'] - 1, -1):
-				print "Aged: {}".format(age)
+				if not quiet:
+					print "Aged: {}".format(age)
 				table[course] = merge_age_times(table[course], get_age_times(events, backup_file))
 
 		table[course] = normalize_table(table[course])
@@ -163,4 +174,13 @@ def input_standard(backup_file = backup, events = all_events, delineator=''):
 
 
 if __name__ == "__main__":
-	input_standard(delineator=',')
+	import argparse
+	parser = argparse.ArgumentParser(description = "Manual Swim Standard Formatter", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
+	parser.add_argument('-d', '--delineator', type=str,            default='',          help="Character (str) to seperate columns with.")
+	parser.add_argument('-b', '--backup',     type=str,            default='input.txt', help="File to store the input text into.")
+	parser.add_argument('-q', '--quiet',      action='store_true',                      help="Don't put any user feed back on the terminal.")
+
+	opt = parser.parse_args()
+
+	input_standard(delineator=opt.delineator, backup_file=opt.backup, quiet=opt.quiet)
