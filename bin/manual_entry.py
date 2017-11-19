@@ -40,9 +40,9 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 	    'LC'     : { 'event' : { 'times' : [int], 'agediff': [int] } }
 	  }
 	"""
+	no_time = str2time('0')
 	def initialize_event_times(event_list, width = None):
 		new_parent = {}
-		no_time = str2time('0')
 		for event in event_list:
 			if isinstance(width,int):
 				new_parent[event] = [no_time] * width
@@ -61,11 +61,15 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 				input_time = raw_input("{: <11}: ".format(event))
 			times[event] = str2time(input_time)
 			if not quiet:
-				print term.move_up()  + "{: <11}: {:<12} {}".format(event, input_time, times[event].strftime("%M:%S.%f")[:-4])
+				if times[event] != no_time:
+					print term.move_up()  + "{: <11}: {:<12} {}".format(event, input_time, times[event].strftime("%M:%S.%f")[:-4])
 
 		with open(backup_file,'a+') as save:
 			for event in event_list: # Insure order
-				save.write("{}\n".format(times[event].strftime("%M:%S.%f")[:-4]))
+				if times[event] == no_time:
+					save.write("\n")
+				else:
+					save.write("{}\n".format(times[event].strftime("%M:%S.%f")[:-4]))
 		return times
 
 	def merge_age_times(parent, new):
@@ -75,7 +79,6 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 		return new_parent
 
 	def normalize_table(table):
-		no_time = str2time('0')
 		new_table = {}
 		for event,times in table.iteritems():
 			last_time = no_time
@@ -94,7 +97,6 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 		return new_table
 
 	def show_table(table, event_key_list, delineator):
-		no_time = str2time('0')
 		start_age  = table['age']['young']
 		finish_age = table['age']['old']
 
