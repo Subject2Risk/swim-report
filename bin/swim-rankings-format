@@ -1,0 +1,22 @@
+#!/bin/bash
+
+function error() {
+	echo "Error: " "${1}"
+	exit 1
+}
+
+[   -z "${1}" ] && error "Supply the swimmer ID file."
+[ ! -f "${1}" ] && error "\"${1}\" is not a file."
+
+if [ ! -z "${2}" ] && [ "x-x" =- "x${2}" ] ; then 
+	# Blank out previous data
+	while read ID ; do
+		rm ${ID}.csv
+		touch ${ID}.csv
+	done < "${1}"
+fi
+
+for i in $(find ./ -name "*.csv" -size 0 | sed -r 's/^..//' | sort); do
+	echo ${i} | sed -r 's#([0-9]+).+#https://www.swimrankings.net/index.php?page=athleteDetail\&athleteId=\1#' 
+	swimmer-cut-n-past | sort -t',' -k2,2n -k8,8r -k9,9n  > ${i} 
+done
