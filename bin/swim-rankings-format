@@ -5,11 +5,11 @@ function error() {
 	exit 1
 }
 
-CUTNPASTE="../bin/swimmer-cut-n-past"
+CUT_N_PASTE="../bin/swimmer-cut-n-past"
 
 [   -z "${1}" ] && error "Supply the swimmer ID file."
 [ ! -f "${1}" ] && error "\"${1}\" is not a file."
-[ ! -x "${CUT_N_PASTE}" ] && error "\"${CUT_NM_PASTE}\" can't be located."
+[ ! -x "${CUT_N_PASTE}" ] && error "\"${CUT_N_PASTE}\" can't be located."
 
 if [ ! -z "${2}" ] && [ "x-x" == "x${2}" ] ; then 
 	# Blank out previous data
