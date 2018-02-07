@@ -5,10 +5,13 @@ function error() {
 	exit 1
 }
 
+CUTNPASTE="../bin/swimmer-cut-n-past"
+
 [   -z "${1}" ] && error "Supply the swimmer ID file."
 [ ! -f "${1}" ] && error "\"${1}\" is not a file."
+[ ! -x "${CUT_N_PASTE}" ] && error "\"${CUT_NM_PASTE}\" can't be located."
 
-if [ ! -z "${2}" ] && [ "x-x" =- "x${2}" ] ; then 
+if [ ! -z "${2}" ] && [ "x-x" == "x${2}" ] ; then 
 	# Blank out previous data
 	while read ID ; do
 		rm ${ID}.csv
@@ -18,5 +21,5 @@ fi
 
 for i in $(find ./ -name "*.csv" -size 0 | sed -r 's/^..//' | sort); do
 	echo ${i} | sed -r 's#([0-9]+).+#https://www.swimrankings.net/index.php?page=athleteDetail\&athleteId=\1#' 
-	swimmer-cut-n-past | sort -t',' -k2,2n -k8,8r -k9,9n  > ${i} 
+	${CUT_N_PASTE} | sort -t',' -k2,2n -k8,8r -k9,9n  > ${i} 
 done
