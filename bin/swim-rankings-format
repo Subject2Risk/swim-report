@@ -19,7 +19,11 @@ if [ ! -z "${2}" ] && [ "x-x" == "x${2}" ] ; then
 	done < "${1}"
 fi
 
+TOTAL=$(find ./ -name "*.csv" -size 0 | wc -l)
+
 for i in $(find ./ -name "*.csv" -size 0 | sed -r 's/^..//' | sort); do
+	printf "\n%s/%s\n\n" $(find ./ -name "*.csv" -size 0 | wc -l) ${TOTAL}
+
 	echo ${i} | sed -r 's#([0-9]+).+#https://www.swimrankings.net/index.php?page=athleteDetail\&athleteId=\1#' 
 	${CUT_N_PASTE} | sort -t',' -k2,2n -k8,8r -k9,9n  > ${i} 
 done
