@@ -88,7 +88,14 @@ def fnq(filename, columns = 8, delimiter = ','):
 			print delimiter.join(map(str, header + times))
 
 
-def festival(filename, columns = 5, start_age=10, delimiter = ','):
+provincial_standards = {
+	"festival"      : { 'columns' : 4, 'start_age' : 10 },
+	"championships" : { 'columns' : 4, 'start_age' : 14 },
+	"youth-junior"  : { 'columns' : 5, 'start_age' : 13 },
+	"nova-scotia"   : { 'columns' : 6, 'start_age' : 12 }
+}
+
+def festival(filename, columns = 4, start_age=10, delimiter = ','):
 	age_header(start_age, columns, delimiter)
 
 	with open(filename, 'r') as standard:
@@ -210,14 +217,17 @@ if __name__ == "__main__":
 			standard = sys.argv[2].lower()
 			if "regional" in standard:
 				regional(fn, delimiter = delimiter)
-			elif "festival" in standard:
-				festival(fn, delimiter = delimiter, columns=4)
+			elif any( s in standard for s in provincial_standards.keys()):
+				ps = provincial_standards[standard]
+				festival(fn , start_age = ps["start_age"], columns = ps["columns"])
+#			elif "festival" in standard:
+#				festival(fn, delimiter = delimiter)
 			elif "fnq" in standard:
 				fnq(fn, delimiter = delimiter)
-			elif "provincial" in standard:
-				festival(fn, start_age = 13, delimiter = delimiter)
-			elif "nova-scotia" in standard:
-				festival(fn, columns = 6, start_age = 12, delimiter = delimiter)
+#			elif "provincial" in standard:
+#				festival(fn, start_age = 14, delimiter = delimiter)
+#			elif "nova-scotia" in standard:
+#				festival(fn, columns = 6, start_age = 12, delimiter = delimiter)
 			elif any(s in standard for s in national_standards.keys()):
 				male = True
 				if len(sys.argv) == 4:
