@@ -179,7 +179,7 @@ if __name__ == "__main__":
 	import argparse
 	parser = argparse.ArgumentParser(description = "Manual Swim Standard Formatter", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-	parser.add_argument('-d', '--delineator', type=str,            default='',          help="Character (str) to seperate columns with.")
+	parser.add_argument('-d', '--delineator', type=str,            default=',',         help="Character (str) to seperate columns with.")
 	parser.add_argument('-b', '--backup',     type=str,            default='input.txt', help="File to store the input text into.")
 	parser.add_argument('-q', '--quiet',      action='store_true',                      help="Don't put any user feed back on the terminal.")
 
