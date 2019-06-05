@@ -226,8 +226,8 @@ if __name__ == "__main__":
 				fnq(fn, delimiter = delimiter)
 #			elif "provincial" in standard:
 #				festival(fn, start_age = 14, delimiter = delimiter)
-#			elif "nova-scotia" in standard:
-#				festival(fn, columns = 6, start_age = 12, delimiter = delimiter)
+			elif "nova-scotia" in standard:
+				festival(fn, columns = 6, start_age = 12, delimiter = delimiter)
 			elif any(s in standard for s in national_standards.keys()):
 				male = True
 				if len(sys.argv) == 4:
@@ -238,5 +238,5 @@ if __name__ == "__main__":
 		print 'Usage:'
 		print ' {0} {{filename}} {{formater}} [m (default) | f] [delimiter ("," = default)]'.format(sys.argv[0])
 		print 'Where "formatter" is one of:'
-		print '   "Regional", "Festival", "Provincial", "Trials", "CSC", "CJC", "Easterns", or "Westerns".'
-		print 'Specifyin the delimiter requires the gendder ("m" or "f") be specified too.'
+		print '   "Regional", "Festival", "Provincial", "Trials", "CSC", "CJC", "Nova-Scotia", "Easterns", or "Westerns".'
+		print 'Specifying the delimiter requires the gender ("m" or "f") be specified too.'
