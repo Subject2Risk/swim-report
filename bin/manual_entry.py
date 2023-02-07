@@ -56,13 +56,13 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 		times = {}
 		for event in event_list:
 			if quiet:
-				input_time = raw_input("")
+				input_time = input("")
 			else:
-				input_time = raw_input("{: <11}: ".format(event))
+				input_time = input("{: <11}: ".format(event))
 			times[event] = str2time(input_time)
 			if not quiet:
 				if times[event] != no_time:
-					print term.move_up()  + "{: <11}: {:<12} {}".format(event, input_time, times[event].strftime("%M:%S.%f")[:-4])
+					print(term.move_up()  + "{: <11}: {:<12} {}".format(event, input_time, times[event].strftime("%M:%S.%f")[:-4]))
 
 		with open(backup_file,'a+') as save:
 			for event in event_list: # Insure order
@@ -74,13 +74,13 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 
 	def merge_age_times(parent, new):
 		new_parent = {}
-		for k in parent.iterkeys():
+		for k in parent.keys():
 			new_parent[k] = parent[k] + [ new[k] ]
 		return new_parent
 
 	def normalize_table(table):
 		new_table = {}
-		for event,times in table.iteritems():
+		for event,times in table.items():
 			last_time = no_time
 			agediffs = [None] * len(times)
 			age = 0
@@ -100,28 +100,28 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 		start_age  = table['age']['young']
 		finish_age = table['age']['old']
 
-		print "Young Age{} {}".format(delineator, start_age)
-		print "Old Age  {} {}".format(delineator, finish_age)
-		print ""
-		print "{:11}{}".format("Event", delineator),
+		print("Young Age{} {}".format(delineator, start_age))
+		print("Old Age  {} {}".format(delineator, finish_age))
+		print("")
+		print("{:11}{}".format("Event", delineator), end=' ')
 		for course in ['SC', 'LC']:
 			for age in range(start_age, finish_age + 1):
-				print "{:8}{}".format(age, delineator),
+				print("{:8}{}".format(age, delineator), end=' ')
 		for course in ['SC', 'LC']:
 			for age in range(start_age, finish_age + 1):
-				print "{:2}{}".format(age, delineator),
-		print ""
+				print("{:2}{}".format(age, delineator), end=' ')
+		print("")
 		for event in event_key_list:
-			print "{:>11}{}".format(event, delineator),
+			print("{:>11}{}".format(event, delineator), end=' ')
 			for course in ['SC', 'LC']:
 				last_time = no_time
 				for time in table[course][event]['times']:
 					if time == no_time:
 						time = last_time
 					if time == no_time:
-						print "{:8}{}".format(' ', delineator),
+						print("{:8}{}".format(' ', delineator), end=' ')
 					else:
-						print "{}{}".format(time.strftime("%M:%S.%f")[:-4], delineator),
+						print("{}{}".format(time.strftime("%M:%S.%f")[:-4], delineator), end=' ')
 					last_time = time
 				last_time = no_time
 
@@ -132,20 +132,20 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 					if time == no_time:
 						time = last_time
 					if time == no_time:
-						print "{:2}{}".format(' ', delineator),
+						print("{:2}{}".format(' ', delineator), end=' ')
 					else:
-						print "{:2}{}".format(age, delineator),
+						print("{:2}{}".format(age, delineator), end=' ')
 					last_time = time
-			print ""
+			print("")
 
 	table = { 'age': {}}
 
 	if quiet:
-		table['age']['old']   = int(raw_input(""))
-		table['age']['young'] = int(raw_input(""))
+		table['age']['old']   = int(input(""))
+		table['age']['young'] = int(input(""))
 	else:
-		table['age']['old']   = int(raw_input("Old Age  :"))
-		table['age']['young'] = int(raw_input("Young Age:"))
+		table['age']['old']   = int(input("Old Age  :"))
+		table['age']['young'] = int(input("Young Age:"))
 
 	with open(backup_file, 'w') as f:
 		f.write("{}\n".format(table['age']['old']))
@@ -153,9 +153,9 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 
 	for course in ['SC', 'LC']:
 		if quiet:
-			answer = raw_input( "".format(course))
+			answer = input( "".format(course))
 		else:
-			answer = raw_input( "Enter '{}' times? (Y/n)".format(course))
+			answer = input( "Enter '{}' times? (Y/n)".format(course))
 		if 'n' in answer:
 			with open(backup_file, 'a+') as f:
 				f.write('n\n')
@@ -167,7 +167,7 @@ def input_standard(backup_file = backup, events = all_events, delineator='', qui
 
 			for age in range(table['age']['old'], table['age']['young'] - 1, -1):
 				if not quiet:
-					print "Aged: {}".format(age)
+					print("Aged: {}".format(age))
 				table[course] = merge_age_times(table[course], get_age_times(events, backup_file))
 
 		table[course] = normalize_table(table[course])
